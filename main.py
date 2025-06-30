@@ -300,9 +300,9 @@ class CustomerUI(QtWidgets.QWidget):
         layout.addRow("Account Number:", QtWidgets.QLabel(self.customer.account_number))
         layout.addRow("Balance:", QtWidgets.QLabel(f"${self.customer.balance:.2f}"))
 
-        self.refresh_btn = QtWidgets.QPushButton("Refresh Balance")
-        self.refresh_btn.clicked.connect(self.refresh_balance)
-        layout.addRow(self.refresh_btn)
+        self.transfer_button = QtWidgets.QPushButton("Transfer to Account")
+        self.transfer_button.clicked.connect(self.transfer_money)
+        layout.addRow(self.transfer_button)
 
         self.home_button = QtWidgets.QPushButton("Back to Home")
         self.home_button.clicked.connect(self.back_to_home)
@@ -310,8 +310,26 @@ class CustomerUI(QtWidgets.QWidget):
 
         self.setLayout(layout)
 
-    def refresh_balance(self):
-        self.initUI()
+    def transfer_money(self):
+        from_acc = self.customer.account_number
+        to_acc, ok1 = QtWidgets.QInputDialog.getText(self, "Transfer", "Enter target account number:")
+        if not ok1 or to_acc not in customer_objects:
+            QtWidgets.QMessageBox.warning(self, "Error", "Invalid or non-existent target account number.")
+            return
+        if to_acc == from_acc:
+            QtWidgets.QMessageBox.warning(self, "Error", "Cannot transfer to the same account.")
+            return
+        max_transfer = customer_objects[from_acc].balance
+        amount, ok2 = QtWidgets.QInputDialog.getDouble(self, "Transfer", "Enter amount to transfer:", 0, 0.01, max_transfer, 2)
+        if ok2:
+            if amount > max_transfer:
+                QtWidgets.QMessageBox.warning(self, "Error", "Insufficient funds in your account.")
+            else:
+                customer_objects[from_acc].balance -= amount
+                customer_objects[to_acc].balance += amount
+                save_customers()
+                QtWidgets.QMessageBox.information(self, "Transferred", f"Transferred ${amount:.2f} to account {to_acc}.")
+                self.initUI()  # Update balance display
 
     def back_to_home(self):
         self.close()
