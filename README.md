@@ -16,6 +16,7 @@ This is a GUI-based Bank Management System built with **Python** and **PyQt5** t
 - Login securely
 - View all bank accounts
 - Add or delete customer accounts
+- Deposit and Withdraw money 
 - Track tasks completed (e.g., account actions)
 - View logs of all employee task completions
 
