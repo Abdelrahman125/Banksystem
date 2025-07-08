@@ -1,1 +1,1 @@
-PyQt5   import (QtWidgets, QtGui, QtCore)
+PyQt5
