@@ -12,18 +12,12 @@ def encrypt_md5(plain_text):
     return hash.hexdigest()
 
 if __name__ == "__main__":
-    #cusromer
-    print(encrypt_md5("malek2020"))
-    print(encrypt_md5("nour12"))
-    print(encrypt_md5("terminator2020"))
-    print(encrypt_md5("sasa2020"))
-    print(encrypt_md5("bedo2006"))
-
-
-
-# employee
-print(encrypt_md5("jana2020"))
-print(encrypt_md5("fawzy2020"))
+    # Example usage
+    secret_key = "mysecret"
+    hashed = hashlib.sha256(secret_key.encode('utf-8')).hexdigest()
+    print("Decryption result:", decrypt_sha256(hashed, secret_key))
+    print("MD5 encryption:", encrypt_md5("example"))
+    
 
 
 
