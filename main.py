@@ -12,6 +12,7 @@ from models.customer import Customer
 from models.employee import Employee
 from models.account import Account
 from models.activitylog import ActivityLog
+from decimal import Decimal
 
 
 class TransferDialog(QtWidgets.QDialog):
@@ -74,8 +75,8 @@ class TransferDialog(QtWidgets.QDialog):
                 self.status_label.setText("Insufficient funds!")
                 return
 
-            account_objects[from_account_id].Balance -= amount
-            account_objects[to_account_id].Balance += amount
+            account_objects[from_account_id].Balance -= Decimal(amount)
+            account_objects[to_account_id].Balance += Decimal(amount)
 
             self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
                                    (account_objects[from_account_id].Balance, from_account_id))
@@ -271,8 +272,8 @@ class EmployeeDashboard(QtWidgets.QWidget):
             if amount > max_transfer:
                 QtWidgets.QMessageBox.warning(self, "Error", "Insufficient funds in source account.")
             else:
-                account_objects[from_acc].Balance -= amount
-                account_objects[to_acc].Balance += amount
+                account_objects[from_acc].Balance -= Decimal(amount)
+                account_objects[to_acc].Balance += Decimal(amount)
                 self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
                                        (account_objects[from_acc].Balance, from_acc))
                 self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
@@ -288,7 +289,7 @@ class EmployeeDashboard(QtWidgets.QWidget):
             return
         amount, ok2 = QtWidgets.QInputDialog.getDouble(self, "Deposit", "Enter deposit amount:", 0, 0.01, 1e9, 2)
         if ok2:
-            account_objects[acc].Balance += amount
+            account_objects[acc].Balance += Decimal(amount)
             self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
                                    (account_objects[acc].Balance, acc))
             self.db.conn.commit()
@@ -306,7 +307,7 @@ class EmployeeDashboard(QtWidgets.QWidget):
             if amount > max_amount:
                 QtWidgets.QMessageBox.warning(self, "Error", "Insufficient funds.")
             else:
-                account_objects[acc].Balance -= amount
+                account_objects[acc].Balance -= Decimal(amount)
                 self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
                                        (account_objects[acc].Balance, acc))
                 self.db.conn.commit()
@@ -491,8 +492,8 @@ class CustomerDashboard(QtWidgets.QWidget):
             if amount > max_transfer:
                 QtWidgets.QMessageBox.warning(self, "Error", "Insufficient funds in your account.")
             else:
-                account_objects[from_acc].Balance -= amount
-                account_objects[to_acc].Balance += amount
+                account_objects[from_acc].Balance -= Decimal(amount)
+                account_objects[to_acc].Balance += Decimal(amount)
                 self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
                                        (account_objects[from_acc].Balance, from_acc))
                 self.db.cursor.execute("UPDATE account SET Balance = %s WHERE AccountID = %s",
