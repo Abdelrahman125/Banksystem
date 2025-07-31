@@ -131,6 +131,7 @@ Install with pip:
 
 ```bash
 pip install PyQt5 mysql-connector-python
+pip install python-dotenv
 ```
 
 * `PyQt5`: GUI framework
